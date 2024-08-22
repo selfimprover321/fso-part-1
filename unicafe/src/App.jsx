@@ -1,34 +1,65 @@
+/* eslint-disable react/prop-types */
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const Button = ({onChange, text}) => {
+  return(
+    <>
+      <button onClick = {onChange}>{text}</button>
+    </>
+  )
+}
+const StatisticLine = ({value, text}) => {
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <tr>
+        <td>{text}</td>
+        <td>{value}</td>
+      </tr>
     </>
+  )
+}
+
+const Statistics = ({good, bad, neutral}) => {
+  const total = (good + bad + neutral)
+  const average = total/3
+  const positive = good/total * 100
+  if (good || bad || neutral){
+    return (
+      <div>
+        <h1>Statistics</h1>
+        <table>
+          <StatisticLine text='good' value={good} />
+          <StatisticLine text='neutral' value={neutral} />
+          <StatisticLine text='bad' value={bad} />
+          <StatisticLine text='all' value={total} />
+          <StatisticLine text='average' value={average.toFixed(2)} />
+          <StatisticLine text='positive' value={positive.toFixed(2) + "%"} />
+        </table>
+      </div>
+      
+    )
+  }
+  return (
+    <div>
+      No feedback given
+    </div>
+  )
+}
+
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+  return (
+    <div>
+      <h1>give feedback</h1>
+      <Button onChange={() => setGood(good+1)} text='good'/>
+      <Button onChange={() => setNeutral(neutral+1)} text='neutral'/>
+      <Button onChange={() => setBad(bad+1)} text='bad'/>
+      <Statistics good={good} neutral = {neutral} bad={bad} />
+    </div>
   )
 }
 
